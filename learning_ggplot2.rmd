@@ -1,0 +1,76 @@
+---
+title: "Untitled"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+#install.packages("gapminder")
+library(tidyverse)
+library(gapminder)
+```
+# Basic Plots
+```{r}
+head(gapminder)
+gap07 <- filter(gapminder, year == 2007)
+
+gap07 %>% 
+  ggplot(aes(x=gdpPercap,y=lifeExp, color=continent)) +
+  geom_point()          
+
+gap07_median <-  gap07 %>% 
+  group_by(continent) %>% summarize(med=median(pop))
+
+gap07_median %>% ggplot(aes(x=continent,y=med)) +
+  geom_bar(stat="identity")          
+
+gap_iceland <- gapminder %>% filter(country == "Iceland") 
+head(gap_iceland)
+
+p <- gap_iceland %>% ggplot(aes(x=year,y=gdpPercap))
+#opt 1
+p + geom_point()  +
+    geom_line() + 
+    ggsave("iceland.png", height = 6, width = 8)
+#opt 2
+p + geom_point()  +
+    geom_line() 
+p + ggsave("iceland2.png", height = 6, width = 8)
+
+```
+
+# Viewing data distributions
+```{r}
+# 1
+gap07 %>% ggplot(aes(gdpPercap)) + geom_histogram()
+
+gap07 %>% ggplot(aes(gdpPercap)) + 
+  geom_histogram(bins = 15)
+
+gap07 %>% ggplot(aes(gdpPercap)) + geom_histogram(binwidth=5000)
+
+gap07 %>% ggplot(aes(gdpPercap)) + geom_density()
+
+# 2 
+gap07 %>% ggplot(aes(continent, lifeExp)) + geom_boxplot()
+
+gap07 %>% ggplot(aes(continent, lifeExp)) + 
+  geom_boxplot() +
+  geom_jitter()
+
+gap07 %>% ggplot(aes(continent, lifeExp)) + 
+  geom_boxplot() +
+  geom_jitter(width = 0.5, alpha = 0.2)
+
+```
+# Additional Encodings
+```{r}
+
+```
+
+

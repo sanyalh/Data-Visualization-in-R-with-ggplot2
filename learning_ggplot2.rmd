@@ -19,10 +19,6 @@ library(gapminder)
 head(gapminder)
 gap07 <- filter(gapminder, year == 2007)
 
-gap07 %>% 
-  ggplot(aes(x=gdpPercap,y=lifeExp, color=continent)) +
-  geom_point()          
-
 gap07_median <-  gap07 %>% 
   group_by(continent) %>% summarize(med=median(pop))
 
@@ -70,7 +66,80 @@ gap07 %>% ggplot(aes(continent, lifeExp)) +
 ```
 # Additional Encodings
 ```{r}
+gap07 %>% ggplot(aes(gdpPercap, lifeExp, size=pop, color=continent)) + 
+  geom_point()
+
+gap_pop <- gapminder %>% group_by(continent,year) %>% summarize(meanpop = mean(pop))
+gap_pop %>% ggplot(aes(year,meanpop)) +
+  geom_line()
+gap_pop %>% ggplot(aes(year,meanpop, group=continent)) +
+  geom_line()
+gap_pop %>% ggplot(aes(year,meanpop, color=continent)) +
+  geom_line()
 
 ```
+# Small Multiples
+```{r}
+gapminder %>% ggplot(aes(gdpPercap, lifeExp)) + 
+  geom_point() +
+  facet_grid((continent ~ year))
+
+gap_life <- gapminder %>% group_by(continent,year) %>% 
+  summarize(meanlifeExp = mean(lifeExp))
+
+gap_life %>% ggplot(aes(year,meanlifeExp)) +
+  geom_line() +
+  facet_grid(continent ~ .)
+
+gap_life %>% ggplot(aes(year,meanlifeExp)) +
+  geom_line() +
+  facet_grid(. ~ continent)
+
+gap_life %>% ggplot(aes(year,meanlifeExp)) +
+  geom_line() +
+  facet_wrap(~continent)
+```
+# Smoothing Functions
+```{r}
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  geom_smooth(span=0.2)
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  geom_smooth(span=0.9)
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  geom_smooth(se=FALSE)
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  geom_smooth(level=0.90)
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  geom_smooth(method=lm)
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  geom_smooth(span=0.2)
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(~continent)
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(~continent)
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  geom_smooth(aes(color=continent)) +
+  facet_wrap(~continent)
+```
+
 
 

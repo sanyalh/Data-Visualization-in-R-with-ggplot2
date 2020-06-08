@@ -10,9 +10,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r}
-#install.packages("gapminder")
+# install.packages("gapminder")
+# install.packages("wesanderson")
+# install.packages("ggthemes")
+
 library(tidyverse)
 library(gapminder)
+library(wesanderson)
+library(ggthemes)
+
 ```
 # Basic Plots
 ```{r}
@@ -140,6 +146,158 @@ gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
   geom_smooth(aes(color=continent)) +
   facet_wrap(~continent)
 ```
+
+# Axis Scales
+```{r}
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  scale_x_continuous()
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  scale_x_continuous(trans = "log10")
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  scale_x_log10()
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0,90))
+
+```
+
+# Alternate Color Scales
+```{r}
+gap07 %>% ggplot(aes(gdpPercap, lifeExp, color = continent)) + 
+  geom_point() +
+  scale_x_log10()
+
+gap07 %>% ggplot(aes(gdpPercap, lifeExp, color = continent)) + 
+  geom_point() +
+  scale_x_log10() +
+  scale_color_brewer(palette = "Dark2")
+
+gap07 %>% ggplot(aes(gdpPercap, lifeExp, color = continent)) + 
+  geom_point() +
+  scale_x_log10() +
+  scale_color_manual(values = wes_palette("Darjeeling1"))
+
+# names(wes_palettes)
+# wes_palette("Darjeeling1")
+
+gap07 %>% ggplot(aes(gdpPercap, lifeExp)) + 
+  geom_point(color="blue", size=6) +
+  scale_x_log10() 
+```
+
+# Themes
+```{r}
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_gray()
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_bw()
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_dark()
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_void()
+
+# ggtheme
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_tufte()
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_solarized() +
+  scale_colour_solarized("blue")
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_base()
+
+```
+
+# Customizing Titles etc.
+```{r}
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point(size=2) +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_light()
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point(size=2) +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_light() +
+  theme(legend.position = "bottom")
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point(size=2) +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_light() +
+  theme(legend.position = "none")
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point(size=2) +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_light() +
+  theme(legend.position = c(0.1, 0.85))
+
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point(size=2) +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_light() +
+  theme(legend.position = c(0.1, 0.85)) +
+  ggsave("life_exp_gdp_2007_custom.png", 
+         width = 7, height = 7)
+  
+gap07 %>% ggplot(aes(gdpPercap,lifeExp, color=continent)) +
+  geom_point(size=2) +
+  geom_smooth() +
+  scale_x_log10() +
+  theme_light() +
+  theme(legend.position = c(0.1, 0.85),
+        legend.key = element_blank(),
+        axis.text = element_text(size=12),
+        axis.title = element_text(size=14)) +
+  labs(x="Per Capita GDP",
+       y="Life Expectancy",
+       title="2007 Life Expectancy and GDP",
+       color="Continent") +
+  ggsave("life_exp_gdp_2007_custom.png", 
+         width = 7, height = 7)
+
+```
+
+
 
 
 
